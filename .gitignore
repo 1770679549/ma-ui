@@ -8,7 +8,6 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-node_modules*
 .DS_Store
 dist
 *.local
@@ -23,21 +22,18 @@ dist
 .hbuilderx
 
 .stylelintcache
-# rollup-plugin-visualizer 生成的分析文件
-stats.html
-# unplugin-auto-import 生成的类型文件
-# auto-import.d.ts
-# unplugin-vue-components 生成的类型文件
-# components.d.ts
-# vite-plugin-uni-pages 生成的类型文件
-# uni-pages.d.ts
+.eslintcache
 
-# 插件生成的文件
-# src/pages.json
-# src/manifest.json
+docs/.vitepress/dist
+docs/.vitepress/cache
 
-# lock 文件还是不要了，我主要的版本写死就好了
-# github actions 需要这些文件，所以main分支需要留着
+src/types
+# 单独把这个文件排除掉，用以解决部分电脑生成的 auto-import.d.ts 的API不完整导致类型提示报错问题
+!src/types/auto-import.d.ts
+src/manifest.json
+src/pages.json
+
+# 2025-10-15 by 菲鸽： lock 文件还是需要加入版本管理，今天又遇到版本不一致导致无法运行的问题了。
 # pnpm-lock.yaml
 # package-lock.json
 
@@ -48,7 +44,5 @@ stats.html
 # git rm -r --cached dir1 dir2  ## 针对某些文件夹
 # git rm -r --cached .  ## 针对所有文件
 
-# 要跳过检查时，使用 --no-verify 过滤
-# git commit -m 'feat: 引入 ucharts' --no-verify
-
-# npx @dcloudio/uvm@latest 更新 uniapp
+# 更新 uni-app 官方版本
+# npx @dcloudio/uvm@latest

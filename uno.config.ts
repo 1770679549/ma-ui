@@ -1,8 +1,12 @@
-// uno.config.ts
+import type {
+  Preset,
+} from 'unocss'
+// https://www.npmjs.com/package/@uni-helper/unocss-preset-uni
+import { presetUni } from '@uni-helper/unocss-preset-uni'
+
+// @see https://unocss.dev/presets/legacy-compat
+import { presetLegacyCompat } from '@unocss/preset-legacy-compat'
 import {
-  type Preset,
-  type SourceCodeTransformer,
-  presetUno,
   defineConfig,
   presetAttributify,
   presetIcons,
@@ -10,44 +14,23 @@ import {
   transformerVariantGroup,
 } from 'unocss'
 
-import {
-  presetApplet,
-  presetRemRpx,
-  transformerApplet,
-  transformerAttributify,
-} from 'unocss-applet'
-
-// @see https://unocss.dev/presets/legacy-compat
-import presetLegacyCompat from '@unocss/preset-legacy-compat'
-
-const isMp = process.env?.UNI_PLATFORM?.startsWith('mp') ?? false
-
-const presets: Preset[] = []
-const transformers: SourceCodeTransformer[] = []
-if (isMp) {
-  // 使用小程序预设
-  presets.push(presetApplet(), presetRemRpx())
-  transformers.push(transformerApplet())
-} else {
-  presets.push(
-    // 非小程序用官方预设
-    presetUno(),
-    // 支持css class属性化
-    presetAttributify(),
-  )
-}
 export default defineConfig({
   presets: [
-    ...presets,
-    // 支持图标，需要搭配图标库，eg: @iconify-json/carbon, 使用 `<button class="i-carbon-sun dark:i-carbon-moon" />`
+    presetUni({
+      attributify: false,
+    }),
     presetIcons({
       scale: 1.2,
       warn: true,
       extraProperties: {
-        display: 'inline-block',
+        'display': 'inline-block',
         'vertical-align': 'middle',
       },
     }),
+    // 支持css class属性化
+    presetAttributify(),
+    // TODO: check 是否会有别的影响
+    // 处理低端安卓机的样式问题
     // 将颜色函数 (rgb()和hsl()) 从空格分隔转换为逗号分隔，更好的兼容性app端，example：
     // `rgb(255 0 0)` -> `rgb(255, 0, 0)`
     // `rgba(255 0 0 / 0.5)` -> `rgba(255, 0, 0, 0.5)`
@@ -55,28 +38,20 @@ export default defineConfig({
       commaStyleColorFunction: true,
     }) as Preset,
   ],
-  /**
-   * 自定义快捷语句
-   * @see https://github.com/unocss/unocss#shortcuts
-   */
-  shortcuts: [
-    ['center', 'flex justify-center items-center'],
-    ['text-primary', 'text-yellow'],
-  ],
   transformers: [
-    ...transformers,
-    // 启用 @apply 功能
+    // 启用指令功能：主要用于支持 @apply、@screen 和 theme() 等 CSS 指令
     transformerDirectives(),
     // 启用 () 分组功能
     // 支持css class组合，eg: `<div class="hover:(bg-gray-400 font-medium) font-(light mono)">测试 unocss</div>`
     transformerVariantGroup(),
-    // Don't change the following order
-    transformerAttributify({
-      // 解决与第三方框架样式冲突问题
-      prefixedOnly: true,
-      prefix: 'fg',
-    }),
   ],
+  shortcuts: [
+    {
+      center: 'flex justify-center items-center',
+    },
+  ],
+  // 动态图标需要在这里配置，或者写在vue页面中注释掉
+  safelist: ['i-carbon-code', 'i-carbon-home', 'i-carbon-user'],
   rules: [
     [
       'p-safe',
@@ -88,10 +63,15 @@ export default defineConfig({
     ['pt-safe', { 'padding-top': 'env(safe-area-inset-top)' }],
     ['pb-safe', { 'padding-bottom': 'env(safe-area-inset-bottom)' }],
   ],
+  theme: {
+    colors: {
+      /** 主题色，用法如: text-primary */
+      primary: 'var(--wot-color-theme,#0957DE)',
+    },
+    fontSize: {
+      /** 提供更小号的字体，用法如：text-2xs */
+      '2xs': ['20rpx', '28rpx'],
+      '3xs': ['18rpx', '26rpx'],
+    },
+  },
 })
-
-/**
- * 最终这一套组合下来会得到：
- * mp 里面：mt-4 => margin-top: 32rpx
- * h5 里面：mt-4 => margin-top: 1rem
- */

@@ -1,17 +1,10 @@
-<template>
-  <view class="default-layout">
-    <slot />
-    <wd-toast />
-    <wd-message-box />
-  </view>
-</template>
+<script lang="ts" setup>
+const testUniLayoutExposedData = ref('testUniLayoutExposedData')
+defineExpose({
+  testUniLayoutExposedData,
+})
+</script>
 
-<style lang="scss">
-.default-layout {
-  height: 100vh;
-  /* #ifdef H5 */
-  padding-bottom: 50px;
-  overflow: auto;
-  /* #endif */
-}
-</style>
+<template>
+  <slot />
+</template>
