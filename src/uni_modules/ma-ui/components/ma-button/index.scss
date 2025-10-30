@@ -1,0 +1,86 @@
+// 按钮尺寸配置
+$button-large-height: 48px;
+$button-large-padding: 24px;
+$button-large-font-size: 16px;
+$button-large-radius: 8px;
+
+$button-medium-height: 40px;
+$button-medium-padding: 20px;
+$button-medium-font-size: 14px;
+$button-medium-radius: 6px;
+
+$button-small-height: 32px;
+$button-small-padding: 16px;
+$button-small-font-size: 13px;
+$button-small-radius: 4px;
+
+$button-mini-height: 24px;
+$button-mini-padding: 12px;
+$button-mini-font-size: 12px;
+$button-mini-radius: 3px;
+
+// 颜色配置
+$primary-color: #007aff;
+$success-color: #4cd964;
+$warning-color: #f0ad4e;
+$danger-color: #dd524d;
+$info-color: #808080;
+$link-color: $primary-color;
+$text-color: #333333;
+
+// 按钮类型样式
+@mixin button-variant($bg-color, $text-color: white, $border-color: null) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: 1px solid $border-color or $bg-color;
+  
+  &.ma-button--plain {
+    background-color: transparent;
+    color: $bg-color;
+    border-color: $bg-color;
+  }
+}
+
+.ma-button {
+  @include button-variant($primary-color);
+  
+  &--success {
+    @include button-variant($success-color);
+  }
+  
+  &--warning {
+    @include button-variant($warning-color);
+  }
+  
+  &--danger {
+    @include button-variant($danger-color);
+  }
+  
+  &--info {
+    @include button-variant($info-color);
+  }
+  
+  &--link {
+    @include button-variant($link-color, $link-color, transparent);
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  &--text {
+    @include button-variant($text-color, $text-color, transparent);
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
